@@ -32,7 +32,7 @@ const userVerify = async (req,res) => {
     try {
         const user = await User.verify(email, otp)
         const token = createToken(user._id)
-        res.status(200).json({user,email, token})
+        res.status(200).json({email, token})
     } catch (error) {
         res.status(400).json({error: error.message})
     }
