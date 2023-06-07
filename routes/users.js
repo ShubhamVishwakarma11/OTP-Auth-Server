@@ -4,7 +4,7 @@ const rateLimiter = require('../middlewares/rateLimiter')
 
 
 const router = express.Router()
-router.use(rateLimiter({allowedHits: 10, allowedMinutes: 2}));
+router.use(rateLimiter({allowedHits: 2, allowedMinutes: 1}));
 
 router.post('/login', userLogin)
 
