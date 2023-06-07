@@ -6,7 +6,7 @@ const sanitizeQuery = (query) => {
 
 const checkNumeric = (otp) => {
     const regex = /\D/g;
-    const res = otp.match(regex);
+    const res = [...otp.matchAll(regex)];
     if (res.length > 0) throw Error("Non-numeric characters are not allowed")
 }
 

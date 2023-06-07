@@ -6,11 +6,24 @@ const createToken = (_id) => {
 }
 
 const userLogin = async (req,res) => {
-    const {email} = req.body
+    const {email, recaptchaValue} = req.body
 
     try {
-        const user = await User.login(email)
-        return res.status(200).json(user)
+        const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.SECRET_KEY}&response=${recaptchaValue}`, {
+            method: "POST"
+        })
+
+        const data = await response.json();
+1
+        if (data.success) {
+            const user = await User.login(email)
+            console.log("verified captcha")
+            return res.status(200).json(user)
+        }
+        else {
+            return res.status(400).json({error: "Recaptcha Verification Failed"});
+        }
+        
     } catch (error) {
         return res.status(400).json({error: error.message})
     }
