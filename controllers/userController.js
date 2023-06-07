@@ -30,10 +30,23 @@ const userLogin = async (req,res) => {
 }
 
 const userSignup = async (req,res) => {
-    const {email} = req.body;
+    const {email, recaptchaValue} = req.body;
     try {
-        const user = await User.signup(email)
-        res.status(200).json({user})
+        const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.SECRET_KEY}&response=${recaptchaValue}`, {
+            method: "POST"
+        })
+
+        const data = await response.json();
+1
+        if (data.success) {
+            const user = await User.signup(email)
+            console.log("recaptcha verified")
+            res.status(200).json({user})
+        }
+        else {
+            return res.status(400).json({error: "Recaptcha Verification Failed"});
+        }
+        
     } catch (error) {
         res.status(400).json({error: error.message})
     }
