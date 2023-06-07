@@ -1,3 +1,4 @@
+const { default: axios } = require('axios')
 const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 
@@ -9,12 +10,13 @@ const userLogin = async (req,res) => {
     const {email, recaptchaValue} = req.body
 
     try {
-        const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.SECRET_KEY}&response=${recaptchaValue}`, {
-            method: "POST"
-        })
+        const response = await axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.SECRET_KEY}&response=${recaptchaValue}`)
+        // const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.SECRET_KEY}&response=${recaptchaValue}`, {
+        //     method: "POST"
+        // })
 
-        const data = await response.json();
-1
+        const data = response.data;
+
         if (data.success) {
             const user = await User.login(email)
             console.log("verified captcha")
@@ -32,12 +34,13 @@ const userLogin = async (req,res) => {
 const userSignup = async (req,res) => {
     const {email, recaptchaValue} = req.body;
     try {
-        const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.SECRET_KEY}&response=${recaptchaValue}`, {
-            method: "POST"
-        })
+        const response = await axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.SECRET_KEY}&response=${recaptchaValue}`)
+        // const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.SECRET_KEY}&response=${recaptchaValue}`, {
+        //     method: "POST"
+        // })
 
-        const data = await response.json();
-1
+        const data = response.data;
+
         if (data.success) {
             const user = await User.signup(email)
             console.log("recaptcha verified")
