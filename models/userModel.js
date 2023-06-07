@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const validator = require('validator');
 const otpGenerator = require('otp-generator');
 const sendOTPMail = require('../utils/sendOTP');
+const { sanitizeQuery, checkNumeric } = require('../utils/sanitizeQuery');
 
 const Schema = mongoose.Schema;
 
@@ -34,6 +35,8 @@ userSchema.statics.signup = async function(email) {
         throw Error('All fields are required')
     }
 
+    sanitizeQuery(email);
+
     if (!validator.isEmail(email)) {
         throw Error('Email is not valid')
     }
@@ -63,6 +66,12 @@ userSchema.statics.login = async function(email) {
         throw Error("All fields are required")
     }
 
+    sanitizeQuery(email);
+
+    if (!validator.isEmail(email)) {
+        throw Error('Email is not valid')
+    }
+
     const user = await this.findOne({email})
 
     if (!user) {
@@ -86,12 +95,21 @@ userSchema.statics.verify = async function(email, otp) {
         throw Error("All fields are required")
     }
 
+    checkNumeric(otp);
+
+    sanitizeQuery(email);
+
+    if (!validator.isEmail(email)) {
+        throw Error('Email is not valid')
+    }
+
     const user = await this.findOne({email})
 
     if (!user) {
         throw Error("Incorrect email")
     }
 
+    
     const match = await bcrypt.compare(otp, user.otp)
     // const match = otp === user.otp ? true : false;
 
