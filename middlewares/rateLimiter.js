@@ -2,10 +2,10 @@ const Limiter = require('../models/limiterModel');
 
 const rateLimiter = ({allowedMinutes, allowedHits}) => {
     return async (req,res,next) => {
-        // const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-        const ip = req.ip;
+        const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        // const ip = req.ip;
 
-        console.log("ip: ", ip);
+        console.log("req: ", req);
 
         const data = await Limiter.findOne({ip});
 
