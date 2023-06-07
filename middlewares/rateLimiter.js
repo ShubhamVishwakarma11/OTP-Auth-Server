@@ -5,7 +5,7 @@ const rateLimiter = ({allowedMinutes, allowedHits}) => {
         const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
         // const ip = req.ip;
 
-        console.log("req: ", req);
+        console.log("ip: ", ip);
 
         const data = await Limiter.findOne({ip});
 
